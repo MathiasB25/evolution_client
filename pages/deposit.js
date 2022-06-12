@@ -234,7 +234,7 @@ export default function Buy () {
                             </div>
                             <div className='w-1/2'>
                                 <label className='block text-left mb-2'>{'Código de seguridad (CVV)'}</label>
-                                <input type='number' placeholder='Introduce el código de seguridad' className='w-full outline-none p-3 border rounded-md' value={cardPin} onChange={e => setCardPin(e.target.value)} />
+                                <input type='number' maxLength='3' placeholder='Introduce el código de seguridad' className='w-full outline-none p-3 border rounded-md' value={cardPin} onChange={e => setCardPin(e.target.value)} />
                             </div>
                         </div>
                         <div className='mt-10 text-left text-lg font-semibold'>{`Monto de la compra: ${receive} BTC`}</div>
