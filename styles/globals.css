@@ -15,6 +15,11 @@ div, a, span, p {
   padding: 0;
 }
 
+/* Disable image draggable */
+.img-draggable {
+  -webkit-user-drag: none;
+}
+
 /* Hide input number arrows */
 
 input::-webkit-outer-spin-button,
@@ -254,8 +259,10 @@ input[type=number] {
 
 /* Layout Private */
 
-.layout-children-height {
-  height: calc(100vh - 5rem);
+@media (min-width: 1024px) {
+  .layout-children-height {
+    height: calc(100vh - 5rem);
+  }
 }
 
 .dashboard-img span {

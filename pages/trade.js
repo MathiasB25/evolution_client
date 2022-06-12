@@ -10,17 +10,19 @@ import { priceFormatter } from '../helpers'
 
 export default function Trade() {
 
-    const { currencies, token, loading, busd, setBusd } = useCryptoProvider()
+    const { currencies, token, loading, busd, setWallet, tradeToken } = useCryptoProvider()
     const { auth } = useAuthProvider()
 
     const [ alert, setAlert ] = useState({})
     const [ option, setOption ] = useState(true)
-    const [ price, setPrice ] = useState(0)
-    const [ reverse, setReverse ] = useState(0)
-    const [ value, setValue ] = useState(0)
-    const [ convert, setConvert ] = useState(0)
+    const [ price, setPrice ] = useState('')
+    const [ reverse, setReverse ] = useState('')
+    const [ value, setValue ] = useState('')
+    const [ convert, setConvert ] = useState('')
 
     useEffect( () => {
+        setConvert('')
+        setValue('')
         const price = token?.price / 1
         const reverse = 1 / token?.price
         if (parseInt(price).toString().length === 1) {
@@ -41,13 +43,13 @@ export default function Trade() {
 
     const handleOption = (boolean) => {
         setOption(boolean)
-        setValue(0)
-        setConvert(0)
+        setValue('')
+        setConvert('')
         setAlert({})
     }
     
     const handleConvert = () => {
-        if(value == 0) {
+        if(value == '') {
             setAlert({
                 msg: 'Debes ingresar un valor',
                 error: true
@@ -55,7 +57,7 @@ export default function Trade() {
             return
         }
         setAlert({})
-        const convertState = value / token?.price
+        const convertState = (Number(value) - ((Number(value) * 0.01) / 100)) / token?.price
         if (parseInt(convertState).toString().length === 1) {
             setConvert(convertState.toFixed(8))
         } else if (parseInt(convertState).toString().length === 2) {
@@ -66,8 +68,8 @@ export default function Trade() {
     }
 
     const handleCancel = () => {
-        setConvert(0)
-        setValue(0)
+        setConvert('')
+        setValue('')
     }
 
     const handleBuy = async () => {
@@ -81,22 +83,33 @@ export default function Trade() {
             }
         }
 
-        if(value > busd) {
-            setAlert({
-                msg: 'Fondos insuficientes',
-                error: true
-            })
-            return
-        } 
-
         const { price, name, symbol } = token
         const { _id } = auth
 
         try {
-            await axios.post('/api/buy', { symbol, name, price, amount: convert, user: _id, config })
-            setBusd(busd - value)
-            setValue(0)
-            setConvert(0)
+            const { data } = await axios.post('/api/buy', { symbol, name, price, amount: convert, user: _id, config })
+            if(!data.msg) {
+                setWallet(data)
+                /* Alert */
+                setAlert({
+                    msg: `Has comprado ${convert} ${token.name}`,
+                    error: false
+                })
+                setTimeout(() => {
+                    setAlert({})
+                }, 3000)
+                /* Reset forms */ 
+                setValue('')
+                setConvert('')
+            } else {
+                setAlert({
+                    msg: data.msg,
+                    error: true
+                })
+                setTimeout(() => {
+                    setAlert({})
+                }, 3000)
+            }
         } catch (error) {
             console.log(error)
         }
@@ -118,23 +131,41 @@ export default function Trade() {
 
         try {
             const { data } = await axios.post('/api/sell', { symbol, name, amount: convert, user: _id, price, config })
-            setAlert({
-                msg: data.msg,
-                error: true
-            })
-            setValue(0)
-            setConvert(0)
+            if(!data.msg) {
+                setWallet(data)
+                setAlert({
+                    msg: `Has vendido ${convert} ${token.name}`,
+                    error: false
+                })
+                setTimeout(() => {
+                    setAlert({})
+                }, 3000)
+                setValue('')
+                setConvert('')
+            } else {
+                setAlert({
+                    msg: data.msg,
+                    error: true
+                })
+                setTimeout(() => {
+                    setAlert({})
+                }, 3000)
+            }
         } catch (error) {
             console.log(error)
         }
     }
 
+    useEffect( () => {
+        if(convert !== '') handleConvert()
+    }, [value])
+
     const { msg } = alert
 
     return (
         <LayoutPrivate page='Intercambiar'>
-            <div className='flex flex-col-reverse lg:flex-row layout-children-height'>
-                <div className='w-full lg:w-2/3 border-r border-gray-200 px-0 sm:px-5 overflow-y-scroll'>
+            <div className='flex flex-col-reverse lg:flex-row overflow-y-scroll layout-children-height'>
+                <div className='w-full lg:w-2/3 lg:border-r lg:border-gray-200 px-0 sm:px-5 lg:overflow-y-scroll'>
                     <div className='text-5xl px-4 py-10 font-semibold'>Mercado</div>
                     <div className='flex items-center'>
                         <div className='flex mx-4 text-lg font-semibold mb-5 w-2/3 lg:w-9/12'>
@@ -170,9 +201,17 @@ export default function Trade() {
                         <div className='mt-5'>
                             {msg && <div className='mb-4'><Alert alert={alert} /></div>}
                             <div className='text-4xl font-semibold'>{token?.symbol}/BUSD</div>
-                            <div className='flex gap-2 text-xl mt-2'>
-                                <div>Billetera:</div>
-                                <div>{priceFormatter(busd)} BUSD</div>
+                            <div className='flex gap-2 text-xl'>
+                                <div className='text-xl'>Balance:</div>
+                                <div className='text-xl'>{priceFormatter(busd)} BUSD</div>
+                            </div>
+                            <div className='flex gap-2 text-md'>
+                                <div>{`Balance en ${token?.symbol}:`}</div>
+                                {tradeToken.length > 0 ? (
+                                    <div>{String(parseInt(tradeToken[0].amount)).length > 1 ? priceFormatter(tradeToken[0].amount * token?.price) : priceFormatter(tradeToken[0].amount * token?.price)} BUSD</div>
+                                ) : (
+                                    <div>0 BUSD</div>
+                                )}
                             </div>
                             <div>
                                 <div className='flex justify-between mt-10 mb-2 flex-col 2xl:flex-row 2xl:items-center'>
@@ -180,7 +219,7 @@ export default function Trade() {
                                     <div className='font-semibold'>1 {token?.symbol} = {price} BUSD</div>
                                 </div>
                                 <input type='number' placeholder='Monto' className='w-full py-3 pl-4 border outline-none rounded-md' value={value} onChange={e => setValue(e.target.value)} />
-                                { convert !== 0 ? (
+                                { convert !== '' ? (
                                     <>
                                         <div className='flex justify-between items-center mt-10 mb-3 text-lg'>
                                             <div>Recibiras:</div>
@@ -198,9 +237,17 @@ export default function Trade() {
                         <div className='mt-5'>
                             {msg && <div className='mb-4'><Alert alert={alert} /></div>}
                             <div className='text-4xl font-semibold'>{token?.symbol}/BUSD</div>
-                            <div className='flex gap-2 text-xl mt-2'>
-                                <div>Billetera:</div>
-                                <div>{priceFormatter(busd)} BUSD</div>
+                            <div className='flex gap-2 text-xl'>
+                                <div className='text-xl'>Balance:</div>
+                                <div className='text-xl'>{priceFormatter(busd)} BUSD</div>
+                            </div>
+                            <div className='flex gap-2 text-md'>
+                                <div>{`Balance en ${token?.symbol}:`}</div>
+                                {tradeToken.length > 0 ? (
+                                    <div>{String(parseInt(tradeToken[0].amount)).length > 1 ? priceFormatter(tradeToken[0].amount * token?.price) : priceFormatter(tradeToken[0].amount * token?.price)} BUSD</div>
+                                ) : (
+                                    <div>0 BUSD</div>
+                                )}
                             </div>
                             <div>
                                     <div className='flex justify-between mt-10 mb-2 flex-col 2xl:flex-row 2xl:items-center'>
@@ -208,7 +255,7 @@ export default function Trade() {
                                     <div className='font-semibold'>1 {token?.symbol} = {price} BUSD</div>
                                 </div>
                                 <input type='number' placeholder='Monto' className='w-full py-3 pl-4 border outline-none rounded-md' value={value} onChange={e => setValue(e.target.value)} />
-                                {convert !== 0 ? (
+                                {convert !== '' ? (
                                     <>
                                         <div className='flex justify-between items-center mt-10 mb-3 text-lg'>
                                             <div>Recibiras:</div>

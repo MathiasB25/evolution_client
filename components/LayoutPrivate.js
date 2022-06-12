@@ -81,7 +81,7 @@ const LayoutPrivate = ({children, page}) => {
                                         <p className={`${menu && 'block'} md:hidden xl:block`}>Convertir</p>
                                     </div>
                                 </Link>
-                                <Link href='/buy'>
+                                <Link href='/deposit'>
                                     <div className={`${page === 'Depositar' && 'bg-zinc-100 text-sky-600'} mt-5 flex gap-2 items-center md:text-xl font-semibold select-none cursor-pointer mx-3 2xl:mx-6 px-3 2xl:px-4 py-3 transition-all rounded-full tooltip ${menu && 'text-3xl'}`}>
                                         <div className='tooltiptext xl:hidden'>Depositar</div>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

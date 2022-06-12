@@ -4,28 +4,13 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import LayoutPrivate from '../components/LayoutPrivate'
 import useCryptoProvider from '../hooks/useCryptoProvider'
-import useAuthProvider from '../hooks/useAuthProvider'
 import { priceFormatter } from '../helpers'
 
 export default function Dashboard() {
 
-    const { wallet, setWallet, currencies } = useCryptoProvider()
-    const { auth } = useAuthProvider()
+    const { wallet, currencies } = useCryptoProvider()
     const [ balance, setBalance ] = useState(0)
     const [ images, setImages ] = useState([])
-
-    useEffect(() => {
-        const getWallet = async () => {
-            try {
-                const { data } = await axios.post('/api/getWallet', { auth })
-                setWallet(data)
-            } catch (error) {
-                console.log(error.response)
-            }
-        }
-        getWallet()
-    }, [auth])
-
 
     useEffect(() => {
         const calculateBalance = () => {
@@ -78,7 +63,11 @@ export default function Dashboard() {
                                         <div className='text-lg font-semibold'>{token.symbol}</div>
                                         <Link href='trade'><div type='button' className='underline cursor-pointer w-fit text-gray-500'>{token.name}</div></Link>
                                     </div>
-                                    <div className='w-1/3'>{String(token.amount).slice(0, 12)}</div>
+                                    {String(parseInt(token.amount)).length > 1 ? (
+                                        <div className='w-1/3'>{Number(token.amount).toFixed(2)}</div>
+                                    ) : (
+                                        <div className='w-1/3'>{Number(token.amount).toFixed(8)}</div>
+                                    )}
                                     <div className='flex gap-2 w-1/3 justify-end'>
                                         <Link href='/trade'><button type='button' className='cursor-pointer hover:text-sky-600 transition-colors'>Comprar</button></Link>
                                         <Link href='/trade'><button type='button' className='cursor-pointer hover:text-sky-600 transition-colors'>Vender</button></Link>

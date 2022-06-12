@@ -15,17 +15,39 @@ const CryptoProvider = ({ children }) => {
     const [ token, setToken ] = useState({})
     const [ btcPrice, setBtcPrice ] = useState(0)
     const [ busd, setBusd ] = useState(0)
+    const [ tradeToken, setTradeToken ] = useState([])
     
+    /* Get cryptocurrencies from an extarnal API */
     useEffect( () => {
+        const firstFetch = async () => {
+            setLoading(true)
+            try {
+                const { data } = await axios('/api/tokens')
+                setCurrencies(data)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        firstFetch()
         const fetchAPI = async () => {
             setLoading(true)
-            const { data } = await axios('/api/tokens')
-            setCurrencies(data)
-            setLoading(false)
+            try {
+                setInterval( async () => {
+                    const { data } = await axios('/api/tokens')
+                    setCurrencies(data)
+                }, 10000)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setLoading(false)
+            }
         }
         fetchAPI()
     }, [])
 
+    /* Set wallet tokens when user is loggedin */
     useEffect(() => {
         const getWallet = async () => {
             try {
@@ -38,6 +60,7 @@ const CryptoProvider = ({ children }) => {
         getWallet()
     }, [auth])
 
+    /* Update BUSD value when wallet state change */
     useEffect( () => {
         const getBusd = () => {
             if (wallet.length > 0) {
@@ -48,11 +71,21 @@ const CryptoProvider = ({ children }) => {
         getBusd()
     }, [wallet])
     
+    /* Set BTC price when currencies state change */
     useEffect( () => {
         const btc = currencies[0]
         setToken(btc)
         setBtcPrice(btc?.price)
     }, [currencies])
+
+    useEffect( () => {
+        /* Set trade token */
+        if (wallet.length > 0 && token?.symbol) { 
+            const setToken = wallet.filter(coin => coin.symbol === token?.symbol)
+            setTradeToken(setToken)
+        }
+    }, [token, wallet])
+
 
     return (
         <CryptoContext.Provider value={{
@@ -65,7 +98,8 @@ const CryptoProvider = ({ children }) => {
             setWallet,
             btcPrice,
             busd,
-            setBusd
+            setBusd,
+            tradeToken
         }}>
             {children}
         </CryptoContext.Provider>
