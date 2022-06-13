@@ -15,13 +15,13 @@ const Navbar = () => {
                 </div>
             </Link>
             <div className='flex gap-5'>
-                <Link href={'/buy'}>
+                <Link href={'/signin'}>
                     <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors'>Comprar Cripto</div>
                 </Link>
                 <Link href='/market'>
                     <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors'>Mercado</div>
                 </Link>
-                <Link href={'/trade'}>
+                <Link href={'/signin'}>
                     <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors'>Trade</div>
                 </Link>
             </div>
