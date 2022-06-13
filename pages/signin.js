@@ -57,7 +57,7 @@ const Signin = () => {
 
     return (
         <Layout page={'Iniciar sesión'}>
-            <div className='mx-10 mt-10 md:container md:mt-20 sm:mx-auto sm:w-2/3 md:w-1/2 lg:w-5/12 xl:w-1/3'>
+            <div className='mx-10 my-10 md:container md:my-20 sm:mx-auto sm:w-2/3 md:w-1/2 lg:w-5/12 xl:w-1/3'>
                 <h1 className='text-center text-4xl font-semibold text-gray-800 mb-10'>Inicia sesión en Evolution</h1>
                 { msg && <Alert alert={alert} />}
                 <form className='flex flex-col mx-auto mt-5' onSubmit={handleSubmit}>

@@ -189,7 +189,7 @@ export default function Buy () {
 
     return (
         <LayoutPrivate page='Depositar'>
-            <div className='text-center mt-20 mx-5 sm:mx-24 md:mx-0'>
+            <div className='text-center my-20 mx-5 sm:mx-24 md:mx-0'>
                 <div className='text-4xl mb-5'>Comprar criptomonedas con tarjeta de crédito o débito</div>
                 {msg && <div className='md:w-8/12 lg:w-7/12 xl:w-6/12 2xl:w-1/2 mx-auto'><Alert alert={alert} /></div> }
                 { step === 1 ? (
