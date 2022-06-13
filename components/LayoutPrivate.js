@@ -92,7 +92,7 @@ const LayoutPrivate = ({children, page}) => {
                             </div>
                         </div>
                     </div>
-                    <div className='w-full'>
+                    <div className='w-full select-none'>
                         <div className='flex items-center h-20 border-b border-gray-200 pl-28 pr-10 md:px-10 justify-between relative'>
                             <div className='text-2xl md:text-xl font-semibold'>{page}</div>
                             <div>
