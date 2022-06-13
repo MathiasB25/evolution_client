@@ -8,10 +8,10 @@ import { useRouter } from "next/router"
 const LayoutPrivate = ({children, page}) => {
 
     const router = useRouter()
+    const { auth } = useAuthProvider()
 
     const [ menu, setMenu ] = useState(false)
-
-    const { auth } = useAuthProvider()
+    const [ accountModal, setAccountModal ] = useState(false)
 
     useEffect( () => {
         const redirect = () => {
@@ -28,7 +28,6 @@ const LayoutPrivate = ({children, page}) => {
                 <Head>
                     <title>Evolution | {page}</title>
                     <meta name='description' content='Sitio web de intercambio de criptomonedas' />
-                    <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet" />
                 </Head>
                 <div className='flex'>
                     <div className='relative'>
@@ -94,11 +93,20 @@ const LayoutPrivate = ({children, page}) => {
                         </div>
                     </div>
                     <div className='w-full'>
-                        <div className='flex items-center h-20 border-b border-gray-200 pl-28 pr-10 md:px-10 justify-between'>
+                        <div className='flex items-center h-20 border-b border-gray-200 pl-28 pr-10 md:px-10 justify-between relative'>
                             <div className='text-2xl md:text-xl font-semibold'>{page}</div>
-                            <div className='flex items-center gap-5 sm:hover:bg-zinc-200 sm:pl-3 sm:pr-1 cursor-pointer rounded-md transition-colors'>
-                                <div className='text-lg font-semibold hidden sm:block'>{auth.name}</div>
-                                <div><Image src={'/img/user.png'} width={55} height={55} /></div>
+                            <div>
+                                <div className='flex items-center gap-5 sm:hover:bg-zinc-200 sm:pl-3 sm:pr-1 cursor-pointer rounded-md transition-colors select-none' onClick={() => setAccountModal(!accountModal)}>
+                                    <div className='text-lg font-semibold hidden sm:block'>{auth.name}</div>
+                                    <div><Image src={'/img/user.png'} width={55} height={55} /></div>
+                                </div>
+                                { accountModal && (
+                                    <div className='absolute z-10 p-4 shadow-xl rounded-b-md bg-white right-10 flex flex-col gap-2'>
+                                        <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap'>Cuenta</div>
+                                        <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap'>Apariencia</div>
+                                        <div className='p-3 px-8 hover:bg-red-400 hover:text-white transition-colors cursor-pointer rounded-md whitespace-nowrap'>Cerrar sesión</div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className='relative'>{children}</div>

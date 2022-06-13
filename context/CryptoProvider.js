@@ -74,7 +74,7 @@ const CryptoProvider = ({ children }) => {
     /* Set BTC price when currencies state change */
     useEffect( () => {
         const btc = currencies[0]
-        setToken(btc)
+        if (!token?.symbol) setToken(btc)
         setBtcPrice(btc?.price)
     }, [currencies])
 

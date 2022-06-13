@@ -26,7 +26,7 @@ const List = ({ token }) => {
 
     return (
         token && (
-            <div className='flex items-center'>
+            <div key={token.symbol} className='flex items-center'>
                 <div className='flex items-center p-4 text-lg font-semibold w-full sm:w-2/3 lg:w-9/12'>
                     <div className='flex items-center gap-3 w-full sm:w-7/12 lg:w-6/12 table-market-name'>
                         <Image src={token.logo_url} width={35} height={35} />

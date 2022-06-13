@@ -13,8 +13,9 @@ export default function Home() {
     const router = useRouter()
 
     const [ tokens, setTokens ] = useState([])
+    const [ loading, setLoading ] = useState(true)
     const [ emailState, setEmailState ] = useState('')
-    const { currencies, loading } = useCryptoProvider()
+    const { currencies } = useCryptoProvider()
     const { setEmail } = useAuthProvider()
 
     useEffect( () => {
@@ -35,6 +36,14 @@ export default function Home() {
         setEmail(emailState)
         router.push('/signup')
     }
+
+    useEffect( () => {
+        if(tokens.length > 0) {
+            tokens.map( token => token?.symbol && (
+                setLoading(false)
+            ))
+        }
+    }, [tokens])
 
     return (
         <Layout page='Inicio'>
@@ -79,7 +88,7 @@ export default function Home() {
                             <ListMarket />
                         </>
                     ) : tokens.length > 0 && tokens.map(token => (
-                        <List key={token?.id} token={token} />
+                        <List key={token?.symbol} token={token} />
                     ))}
                 </div>
                 <div className='flex flex-col gap-5 mt-10'>

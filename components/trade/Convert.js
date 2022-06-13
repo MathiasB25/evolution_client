@@ -109,7 +109,7 @@ export default function Convert () {
                                 {fromModal && (
                                     <div className='absolute w-full bg-gray-100 left-0 top-12 z-10 h-60 overflow-y-scroll'>
                                         {tokens.map(token => (
-                                            <div key={token.id} className='flex gap-3 items-center p-2 hover:bg-gray-300 cursor-pointer' onClick={() => setFromToken(token)}>
+                                            <div key={token?.id} className='flex gap-3 items-center p-2 hover:bg-gray-300 cursor-pointer' onClick={() => setFromToken(token)}>
                                                 <Image src={token.logo_url} width={25} height={25} />
                                                 <p>{token.id}</p>
                                             </div>

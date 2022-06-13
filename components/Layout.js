@@ -6,8 +6,7 @@ const Layout = ({children, page}) => {
     <div>
         <Head>
           <title>Evolution | {page}</title>
-              <meta name='description' content='Sitio web de intercambio de criptomonedas' />
-          <link href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet" />
+          <meta name='description' content='Sitio web de intercambio de criptomonedas' />
         </Head>
 
         <Navbar />

@@ -189,7 +189,7 @@ export default function Trade() {
                             <ListTrade />
                         </>
                     ) : currencies.map( token => (
-                        <List key={token.id} token={token} />
+                        <List key={token?.id} token={token} />
                     ))}
                 </div>
                 <div className='w-full mx-auto px-10 py-10 lg:w-1/3 lg:p-5'>
