@@ -31,7 +31,7 @@ const LayoutPrivate = ({children, page}) => {
                 </Head>
                 <div className='flex'>
                     <div className='relative'>
-                        <div className='absolute left-10 top-4 block md:hidden' onClick={() => setMenu(!menu)}>
+                        <div className='absolute left-10 top-4 block md:hidden z-10' onClick={() => setMenu(!menu)}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
@@ -102,9 +102,9 @@ const LayoutPrivate = ({children, page}) => {
                                 </div>
                                 { accountModal && (
                                     <div className='absolute z-10 p-4 shadow-xl rounded-b-md bg-white right-10 flex flex-col gap-2'>
-                                        <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap'>Cuenta</div>
-                                        <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap'>Apariencia</div>
-                                        <div className='p-3 px-8 hover:bg-red-400 hover:text-white transition-colors cursor-pointer rounded-md whitespace-nowrap'>Cerrar sesión</div>
+                                        <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Cuenta</div>
+                                        <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Apariencia</div>
+                                        <div className='p-3 px-8 hover:bg-red-400 hover:text-white transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Cerrar sesión</div>
                                     </div>
                                 )}
                             </div>
