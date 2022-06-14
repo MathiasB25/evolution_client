@@ -1,9 +1,10 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Layout from '../components/Layout'
 import useAuthProvider from '../hooks/useAuthProvider'
 import Link from 'next/link'
 import Alert from '../components/Alert'
+import { useRouter } from 'next/router'
 
 export default function Signup () {
 
@@ -46,6 +47,10 @@ export default function Signup () {
                 msg: data.msg,
                 error: false
             })
+            setTimeout( () => {
+                setAlert({})
+                useRouter().push('/signin')
+            }, 3000)
             setName('')
             setEmail('')
             setPassword('')
