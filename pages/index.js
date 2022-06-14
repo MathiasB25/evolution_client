@@ -12,11 +12,12 @@ export default function Home() {
 
     const router = useRouter()
 
+    const { currencies } = useCryptoProvider()
+    const { setEmail } = useAuthProvider()
+
     const [ tokens, setTokens ] = useState([])
     const [ loading, setLoading ] = useState(true)
     const [ emailState, setEmailState ] = useState('')
-    const { currencies } = useCryptoProvider()
-    const { setEmail } = useAuthProvider()
 
     useEffect( () => {
         storeTokens()

@@ -1,10 +1,10 @@
-import useCryptoProvider from '../hooks/useCryptoProvider'
+import useAuthProvider from '../hooks/useAuthProvider'
 import Link from 'next/link'
 
 
 const Navbar = () => {
 
-    const { theme } = useCryptoProvider()
+    const { auth } = useAuthProvider()
 
     return (
         <header className='flex flex-col md:flex-row shadow-sm items-center mx-auto md:px-5 lg:px-28 justify-between font-semibold relative z-10'>
@@ -14,15 +14,18 @@ const Navbar = () => {
                     <p className='font-bold'>Evolution</p>
                 </div>
             </Link>
-            <div className='flex gap-5'>
-                <Link href={'/signin'}>
-                    <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors'>Comprar Cripto</div>
+            <div className='flex gap-3 sm:gap-5'>
+                <Link href={'/'}>
+                    <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors text-lg'>Inicio</div>
+                </Link>
+                <Link href={`${auth._id ? '/deposit' : '/signin'}`}>
+                    <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors text-lg'>Comprar Cripto</div>
                 </Link>
                 <Link href='/market'>
-                    <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors'>Mercado</div>
+                    <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors text-lg'>Mercado</div>
                 </Link>
-                <Link href={'/signin'}>
-                    <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors'>Trade</div>
+                <Link href={`${auth._id ? '/trade' : '/signin'}`}>
+                    <div className='cursor-pointer p-1 hover:text-sky-600 transition-colors text-lg'>Trade</div>
                 </Link>
             </div>
             <div className='flex my-5 md:my-0 gap-4 items-center'>
