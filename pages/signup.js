@@ -6,7 +6,9 @@ import Link from 'next/link'
 import Alert from '../components/Alert'
 import { useRouter } from 'next/router'
 
-export default function Signup () {
+const Signup = () => {
+
+    const router = useRouter()
 
     const { email, setEmail } = useAuthProvider()
 
@@ -14,7 +16,6 @@ export default function Signup () {
     const [ password, setPassword ] = useState('')
     const [ repeatPassword, setRepeatPassword ] = useState('')
     const [ alert, setAlert ] = useState('')
-
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -49,7 +50,7 @@ export default function Signup () {
             })
             setTimeout( () => {
                 setAlert({})
-                useRouter().push('/signin')
+                router.push('/signin')
             }, 3000)
             setName('')
             setEmail('')
@@ -91,3 +92,5 @@ export default function Signup () {
         </Layout>
     )
 }
+
+export default Signup
