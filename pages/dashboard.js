@@ -13,12 +13,17 @@ export default function Dashboard() {
     const [ mobileModal, setMobileModal ] = useState(false)
     const [ modalToken, setModalToken ] = useState({})
 
+    const tokenPrice = (token) => {
+        const price = currencies.filter(currency => currency.symbol === token.symbol)
+        return price[0].price
+    }
+
     useEffect(() => {
         const calculateBalance = () => {
             if(wallet.length > 0) {
                 const balance = 0
                 wallet.map( token => {
-                    const calc = (token.amount * token.price)
+                    const calc = (token.amount * tokenPrice(token))
                     balance = balance + calc
                 })
                 setBalance(balance)
@@ -31,7 +36,7 @@ export default function Dashboard() {
         setMobileModal(!mobileModal)
         setModalToken(token)
     }
-
+    
     return (
         <LayoutPrivate page='Dashboard'>
             <div className='my-10 mx-4 sm:m-10'>
@@ -67,7 +72,7 @@ export default function Dashboard() {
                                     ) : (
                                         <div className='w-1/4 sm:w-3/12 lg:w-1/4'>{Number(token.amount).toFixed(8)}</div>
                                     )}
-                                    <div className='hidden lg:block lg:w-1/4'>{priceFormatter(Number(token.amount * token.price))}</div>
+                                    <div className='hidden lg:block lg:w-1/4'>{priceFormatter(Number(token.amount * tokenPrice(token)))}</div>
                                     <div className='flex gap-2 w-1/4 sm:w-4/12 lg:w-1/4 justify-end relative'>
                                         <div className='block sm:hidden text-gray-700' onClick={() => handleModal(token)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

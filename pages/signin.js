@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import Layout from '../components/Layout'
 import Link from 'next/link'
@@ -15,7 +15,13 @@ const Signin = () => {
     const [ password, setPassword ] = useState('')
     const [ alert, setAlert ] = useState('')
 
-    const { setLoggingin } = useAuthProvider()
+    const { auth, setLoggingin } = useAuthProvider()
+
+    useEffect( () => {
+        if(auth?._id) {
+            router.push('/dashboard')
+        }
+    }, [auth])
 
     const handleSubmit = async (e) => {
         e.preventDefault()

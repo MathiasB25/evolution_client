@@ -29,7 +29,7 @@ const AuthProvider = ({children}) => {
             try {
                 const { data } = await axios.post('/api/profile', { config })
                 setAuth(data)
-                /* router.push('/dashboard') */
+                router.push('/dashboard')
                 setLoggingin(false)
             } catch (error) {
                 setAuth({})

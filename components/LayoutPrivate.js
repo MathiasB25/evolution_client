@@ -101,7 +101,7 @@ const LayoutPrivate = ({children, page}) => {
                                     <div><Image src={'/img/user.png'} width={55} height={55} /></div>
                                 </div>
                                 { accountModal && (
-                                    <div className='absolute z-10 p-4 shadow-xl rounded-b-md bg-white right-10 flex flex-col gap-2'>
+                                    <div className='absolute z-10 p-4 shadow-xl rounded-b-md border-t border-sky-600 bg-white right-10 flex flex-col gap-2 private-account'>
                                         <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Cuenta</div>
                                         <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Apariencia</div>
                                         <div className='p-3 px-8 hover:bg-red-400 hover:text-white transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Cerrar sesión</div>
@@ -109,7 +109,7 @@ const LayoutPrivate = ({children, page}) => {
                                 )}
                             </div>
                         </div>
-                        <div className='relative'>{children}</div>
+                        <div className='relative select-text'>{children}</div>
                     </div>
                 </div>
             </>

@@ -280,3 +280,17 @@ input[type=number] {
   top: 50%;
   transform: translateY(-50%);
 }
+
+.index-account {
+  top: 64px;
+}
+
+.private-account {
+  top: 79px;
+}
+
+@media (max-width: 768px) {
+  .index-account {
+    top: 152px;
+  }
+}
