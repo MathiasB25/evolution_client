@@ -9,7 +9,7 @@ import Image from "next/image"
 
 export default function Buy () {
 
-    const { btcPrice, setWallet } = useCryptoProvider()
+    const { btcPrice, setWallet, currencies } = useCryptoProvider()
     const [ amount, setAmount ] = useState('')
     const [ receive, setReceive ] = useState('')
     const [ alert, setAlert ] = useState({})
@@ -21,16 +21,34 @@ export default function Buy () {
     const [ cardPin, setCardPin ] = useState('')
     const [ cardType, setCardType ] = useState('')
 
+    const [ modalTokens, setModalTokens ] = useState(false)
+    const [ depositToken, setDepositToken ] = useState({})
+
     const { auth } = useAuthProvider()
+
+    useEffect( () => {
+        if(currencies.length > 0) setDepositToken(currencies[0])
+    }, [])
+
+    const handleClose = () => {
+        setModalTokens(false)
+    }
+
+    const handleToken = currency => {
+        setDepositToken(currency)
+        setModalTokens(false)
+        setAmount('')
+        setReceive('')
+    }
 
     const handleAmount = e => {
         setAmount(e.target.value)
         if(e) {
-            setReceive((Number(e.target.value) / Number(btcPrice)).toFixed(8))
+            setReceive((Number(e.target.value) / Number(depositToken.price)).toFixed(8))
         }
         if(e.target.value >= 12500) {
             setAmount(12500)
-            setReceive((12500 / Number(btcPrice)).toFixed(8))
+            setReceive((12500 / Number(depositToken.price)).toFixed(8))
         }
         if(e.target.value === '' || e.target.value === '0') setReceive('')
     }
@@ -38,11 +56,11 @@ export default function Buy () {
     const handleReceive = e => {
         setReceive(e.target.value)
         if (e) {
-            setAmount((Number(e.target.value) * Number(btcPrice)).toFixed(2))
+            setAmount((Number(e.target.value) * Number(depositToken.price)).toFixed(2))
         }
-        if ((Number(e.target.value) * Number(btcPrice)) >= 12500) {
+        if ((Number(e.target.value) * Number(depositToken.price)) >= 12500) {
             setAmount(12500)
-            setReceive((12500 / Number(btcPrice)).toFixed(8))
+            setReceive((12500 / Number(depositToken.price)).toFixed(8))
         }
         if (e.target.value === '' || e.target.value === '0') setAmount('')
     }
@@ -162,12 +180,14 @@ export default function Buy () {
             }
         }
 
+        const { symbol, price, name } = depositToken
+
         try {
-            const { data } = await axios.post('/api/deposit', { symbol: 'BUSD', name: 'Binance USD', price: 1, amount, user: auth._id, config })
+            const { data } = await axios.post('/api/deposit', { symbol, name, price, amount: receive, user: auth._id, config })
             setWallet(data)
             /* Alert */
             setAlert({
-                msg: `Has comprado ${amount} BUSD`
+                msg: `Has comprado ${receive} ${name}`
             })
             setTimeout( () => {
                 setAlert({})
@@ -209,7 +229,38 @@ export default function Buy () {
                         </div>
                         <div className='bg-gray-100 rounded-lg px-4 py-3 pb-4 mt-10'>
                             <label className='block text-left mb-2'>Recibir</label>
-                            <input type='number' placeholder='0.00' className='w-full text-xl bg-transparent outline-none' value={receive} onChange={e => handleReceive(e)} />
+                            <div className='flex justify-between'>
+                                <input type='number' placeholder='0.00' className='w-max text-xl bg-transparent outline-none' value={receive} onChange={e => handleReceive(e)} />
+                                <div className='flex gap-1 p-2 px-3 rounded-full bg-white w-fit cursor-pointer' onClick={() => setModalTokens(!modalTokens)}>
+                                    { depositToken?.name && (
+                                        <Image src={depositToken?.logo_url} width={25} height={25} />
+                                    )}
+                                    <div>{depositToken?.name}</div>
+                                </div>
+                            </div>
+                            { modalTokens && (
+                                <>
+                                    <div className='modal-opacity' onClick={handleClose}></div>
+                                    <div className='deposit-modal shadow-2xl rounded-lg p-5'>
+                                        <div className='flex items-center mb-5'>
+                                            <div className='h-12 w-1/6 border-l border-t border-b flex items-center rounded-l-lg'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                </svg>
+                                            </div>
+                                            <input type='text' placeholder='Buscar' className='h-12 w-5/6 border-r border-t border-b rounded-r-lg outline-none' />
+                                        </div>
+                                        <div className='deposit-modal-scroll pr-2'>
+                                            {currencies.map(currency => (
+                                                <div key={currency?.symbol} className='flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer transition-colors rounded-md' onClick={() => handleToken(currency)} >
+                                                    <Image src={currency?.logo_url} width={30} height={30} />
+                                                    <div>{currency?.name}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div className='w-full p-3 rounded-md bg-sky-600 text-white mt-10 font-semibold hover:bg-sky-700' onClick={handleContinue}>Contiunar</div>
                     </div>

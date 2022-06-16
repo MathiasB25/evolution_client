@@ -41,6 +41,11 @@ export default function Trade() {
         }
     }, [token])
 
+    const tokenPrice = (token) => {
+        const price = currencies.filter(currency => currency.symbol === token.symbol)
+        return price[0].price
+    }
+
     const handleOption = (boolean) => {
         setOption(boolean)
         setValue('')
@@ -208,9 +213,19 @@ export default function Trade() {
                             <div className='flex gap-2 text-md'>
                                 <div>{`Balance en ${token?.symbol}:`}</div>
                                 {tradeToken.length > 0 ? (
-                                    <div>{String(parseInt(tradeToken[0].amount)).length > 1 ? priceFormatter(tradeToken[0].amount * token?.price) : priceFormatter(tradeToken[0].amount * token?.price)} BUSD</div>
+                                    <div>{String(parseInt(tradeToken[0].amount)).length > 1 ? priceFormatter(tradeToken[0].amount * tokenPrice(tradeToken[0])) : priceFormatter(tradeToken[0].amount * token?.price)} BUSD</div>
                                 ) : (
                                     <div>0 BUSD</div>
+                                )}
+                            </div>
+                            <div className='flex gap-2 items-center'>
+                                <div>{`Cantidad en ${token?.symbol}:`}</div>
+                                {tradeToken.length > 0 ? String(parseInt(tradeToken[0].amount)).length > 1 ? (
+                                    <div>{Number(tradeToken[0]?.amount).toFixed(2)} {token?.symbol}</div>
+                                ) : (
+                                    <div>{Number(tradeToken[0]?.amount).toFixed(8)} {token?.symbol}</div>
+                                ) : (
+                                    <div>0 {token?.symbol}</div>
                                 )}
                             </div>
                             <div>

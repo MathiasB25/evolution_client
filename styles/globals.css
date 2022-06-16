@@ -294,3 +294,25 @@ input[type=number] {
     top: 152px;
   }
 }
+
+.deposit-modal {
+  position: fixed;
+  background: white;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%) !important;
+}
+
+.deposit-modal-scroll {
+  height: 40vh;
+  overflow-y: scroll;
+}
+
+.modal-opacity {
+  position: fixed;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  background: rgba(0, 0, 0, .5);
+}
