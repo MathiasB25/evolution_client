@@ -14,22 +14,34 @@ export default function Convert () {
     const [ toToken, setToToken ] = useState({})
     const [ fromModal, setFromModal ] = useState(false)
     const [ toModal, setToModal ] = useState(false)
-    const [ fromValue, setFromValue ] = useState(0)
-    const [ convert, setConvert ] = useState(0)
-    const [ price, setPrice ] = useState(0)
-    const [ reverse, setReverse ] = useState(0)
+    const [ fromValue, setFromValue ] = useState('')
+    const [ convert, setConvert ] = useState('')
+    const [ price, setPrice ] = useState('')
+    const [ reverse, setReverse ] = useState('')
     
     useEffect( () => {
         toToken?.id && setLoading(false)
     }, [toToken])
 
     useEffect( () => {
-        setLoading(true)
-        storeTokens()
-        setConvert(0)
-        setFromValue(0)
-    }, [currencies])
-    
+        if(currencies.length > 0) {
+            setLoading(true)
+            storeTokens()
+            setConvert('')
+            setFromValue('')
+        }
+    }, [])
+
+    const handleModal = modal => {
+        if(modal === 'from') {
+            setFromModal(!fromModal)
+            setToModal(false)
+        } else {
+            setToModal(!toModal)
+            setFromModal(false)
+        }
+    }
+
     const storeTokens = () => {
         let tokensState = []
         for(let i = 0; i < 10; i++) {
@@ -41,9 +53,9 @@ export default function Convert () {
     }
 
     const handleSubmit = e => {
-        setConvert(0)
-        setPrice(0)
-        setReverse(0)
+        setConvert('')
+        setPrice('')
+        setReverse('')
         if(fromValue == 0) return
         const first = fromValue * fromToken.price
         const second = parseFloat(toToken.price)
@@ -78,17 +90,17 @@ export default function Convert () {
         const to = toToken
         setFromToken(to)
         setToToken(from)
-        setConvert(0)
+        setConvert('')
     }
 
     const handleConvert = () => {
-        setConvert(0)
-        setFromValue(0)
+        setConvert('')
+        setFromValue('')
     }
 
     const handleCancel = () => {
-        setConvert(0)
-        setFromValue(0)
+        setConvert('')
+        setFromValue('')
     }
 
     return (
@@ -103,12 +115,12 @@ export default function Convert () {
                         <label className='block mb-2'>De</label>
                         <div className='flex bg-gray-100 relative'>
                             <input type='number' className='w-3/5 lg:w-3/4 bg-transparent outline-none p-3 font-semibold' placeholder='Introduce un valor' value={fromValue} onChange={e => setFromValue(e.target.value)} />
-                            <div className=' flex items-center gap-2 w-2/5 lg:w-1/4 bg-transparent cursor-pointer select-none' onClick={() => setFromModal(!fromModal)}>
+                            <div className=' flex items-center gap-2 w-2/5 lg:w-1/4 bg-transparent cursor-pointer select-none' onClick={() => handleModal('from')}>
                                 <Image src={fromToken?.logo_url} width={25} height={25} />
                                 <p>{fromToken?.id}</p>
                                 {fromModal && (
                                     <div className='absolute w-full bg-gray-100 left-0 top-12 z-10 h-60 overflow-y-scroll'>
-                                        {tokens.map(token => (
+                                        {currencies.map(token => (
                                             <div key={token?.id} className='flex gap-3 items-center p-2 hover:bg-gray-300 cursor-pointer' onClick={() => setFromToken(token)}>
                                                 <Image src={token.logo_url} width={25} height={25} />
                                                 <p>{token.id}</p>
@@ -131,12 +143,12 @@ export default function Convert () {
                         <label className='block mb-2'>A</label>
                         <div className='flex bg-gray-100 relative'>
                             <input type='number' className='w-3/5 lg:w-3/4 bg-transparent outline-none p-3 font-semibold' disabled />
-                            <div className=' flex items-center gap-2 w-2/5 lg:w-1/4 bg-transparent cursor-pointer select-none' onClick={() => setToModal(!toModal)}>
+                            <div className=' flex items-center gap-2 w-2/5 lg:w-1/4 bg-transparent cursor-pointer select-none' onClick={() => handleModal('to')}>
                                 <Image src={toToken?.logo_url} width={25} height={25} />
                                 <p>{toToken?.id}</p>
                                 {toModal && (
                                     <div className='absolute w-full bg-gray-100 left-0 top-12 z-10 h-60 overflow-y-scroll'>
-                                        {tokens.length >= 1 && tokens.map(token => (
+                                        {tokens.length >= 1 && currencies.map(token => (
                                             <div key={token?.id} className='flex gap-3 items-center p-2 hover:bg-gray-300 cursor-pointer' onClick={() => setToToken(token)}>
                                                 <Image src={token.logo_url} width={25} height={25} />
                                                 <p>{token?.id}</p>

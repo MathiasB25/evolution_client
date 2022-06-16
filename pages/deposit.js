@@ -235,7 +235,7 @@ export default function Buy () {
                                     { depositToken?.name && (
                                         <Image src={depositToken?.logo_url} width={25} height={25} />
                                     )}
-                                    <div>{depositToken?.name}</div>
+                                    <div className='font-semibold'>{depositToken?.name}</div>
                                 </div>
                             </div>
                             { modalTokens && (
