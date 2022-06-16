@@ -241,7 +241,7 @@ export default function Buy () {
                             { modalTokens && (
                                 <>
                                     <div className='modal-opacity' onClick={handleClose}></div>
-                                    <div className='deposit-modal shadow-2xl rounded-lg p-5'>
+                                    <div className='w-80vw md:w-auto deposit-modal shadow-2xl rounded-lg p-5'>
                                         <div className='flex items-center mb-5'>
                                             <div className='h-12 w-1/6 border-l border-t border-b flex items-center rounded-l-lg'>
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
