@@ -10,7 +10,6 @@ const CryptoProvider = ({ children }) => {
 
     const [ currencies, setCurrencies ] = useState([])
     const [ loading, setLoading ] = useState(false)
-    const [ theme, setTheme ] = useState(true)
     const [ wallet, setWallet ] = useState([])
     const [ token, setToken ] = useState({})
     const [ btcPrice, setBtcPrice ] = useState(0)
@@ -57,7 +56,7 @@ const CryptoProvider = ({ children }) => {
                 console.log(error.response)
             }
         }
-        getWallet()
+        if (auth?._id) getWallet()
     }, [auth])
 
     /* Update BUSD value when wallet state change */
@@ -74,8 +73,8 @@ const CryptoProvider = ({ children }) => {
     /* Set BTC price when currencies state change */
     useEffect( () => {
         const btc = currencies[0]
-        if (!token?.symbol) setToken(btc)
-        setBtcPrice(btc?.price)
+        if (auth?._id && !token?.symbol) setToken(btc)
+        if(auth?._id) setBtcPrice(btc?.price)
     }, [currencies])
 
     useEffect( () => {
@@ -91,15 +90,16 @@ const CryptoProvider = ({ children }) => {
         <CryptoContext.Provider value={{
             currencies,
             loading,
-            theme,
             token,
             setToken,
             wallet,
             setWallet,
             btcPrice,
+            setBtcPrice,
             busd,
             setBusd,
-            tradeToken
+            tradeToken,
+            setTradeToken
         }}>
             {children}
         </CryptoContext.Provider>

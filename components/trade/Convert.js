@@ -1,12 +1,16 @@
+import axios from 'axios'
 import { useState, useEffect } from "react"
 import useCryptoProvider from "../../hooks/useCryptoProvider"
 import Image from "next/image"
 import Loading from '../Loading'
-import Link from 'next/link'
+import { valueFormatter } from '../../helpers/'
+import Alert from '../Alert'
+import useAuthProvider from "../../hooks/useAuthProvider"
 
 export default function Convert () {
 
-    const { currencies } = useCryptoProvider()
+    const { currencies, wallet, setWallet } = useCryptoProvider()
+    const { auth } = useAuthProvider()
 
     const [ loading, setLoading ] = useState(false)
     const [ tokens, setTokens ] = useState([])
@@ -18,6 +22,9 @@ export default function Convert () {
     const [ convert, setConvert ] = useState('')
     const [ price, setPrice ] = useState('')
     const [ reverse, setReverse ] = useState('')
+    const [ walletToken, setWalletToken ] = useState({})
+
+    const [ alert, setAlert ] = useState({})
     
     useEffect( () => {
         toToken?.id && setLoading(false)
@@ -31,6 +38,17 @@ export default function Convert () {
             setFromValue('')
         }
     }, [])
+
+    useEffect( () => {
+        setFromValue('')
+        const walletToken = wallet.filter(token => token.symbol === fromToken.symbol)
+        setWalletToken(walletToken[0])
+    }, [fromToken])
+
+    useEffect( () => {
+        if (convert !== '') handleConvert()
+        if( fromValue == 0 || fromValue === '') setConvert('')
+    }, [fromValue])
 
     const handleModal = modal => {
         if(modal === 'from') {
@@ -52,37 +70,8 @@ export default function Convert () {
         setToToken(tokensState.filter(token => token?.id === 'BTC')[0])
     }
 
-    const handleSubmit = e => {
-        setConvert('')
-        setPrice('')
-        setReverse('')
-        if(fromValue == 0) return
-        const first = fromValue * fromToken.price
-        const second = parseFloat(toToken.price)
-        const convert = parseFloat(first.toFixed(2)) / parseFloat(second.toFixed(2))
-        const price = fromToken.price / toToken.price
-        const reverse = toToken.price / fromToken.price
-        if (parseInt(price).toString().length === 1) {
-            setPrice(price.toFixed(8))
-        } else if (parseInt(price).toString().length === 2) {
-            setPrice(price.toFixed(2))
-        } else if (parseInt(price).toString().length >= 3) {
-            setPrice(price.toFixed(1))
-        }
-        if (parseInt(reverse).toString().length === 1) {
-            setReverse(reverse.toFixed(8))
-        } else if (parseInt(reverse).toString().length === 2) {
-            setReverse(reverse.toFixed(2))
-        } else if (parseInt(reverse).toString().length >= 3) {
-            setReverse(reverse.toFixed(1))
-        }
-        if (parseInt(convert).toString().length === 1) {
-            setConvert(convert.toFixed(8))
-        } else if (parseInt(convert).toString().length === 2) {
-            setConvert(convert.toFixed(2))
-        } else if (parseInt(convert).toString().length >= 3) {
-            setConvert(convert.toFixed(1))
-        }
+    const handleSetValue = () => {
+        setFromValue(valueFormatter((walletToken.amount * 99.98) / 100))
     }
 
     const handleSwap = () => {
@@ -93,28 +82,121 @@ export default function Convert () {
         setConvert('')
     }
 
-    const handleConvert = () => {
+    const handleConvert = e => {
         setConvert('')
-        setFromValue('')
+        setPrice('')
+        setReverse('')
+        if(fromToken.symbol === toToken.symbol) {
+            setAlert({
+                msg: 'No puedes convertir la misma moneda',
+                error: true
+            })
+            setTimeout( () => {
+                setAlert({})
+            }, 4000)
+            return
+        }
+        if(fromValue == 0 || fromValue === '') {
+            setAlert({
+                msg: 'Debes ingresar un valor',
+                error: true
+            })
+            setTimeout(() => {
+                setAlert({})
+            }, 4000)
+            return
+        }
+        const walletToken = wallet.filter( token => token.symbol === fromToken.symbol)
+        if(walletToken.length > 0) {
+            if(walletToken[0].amount > fromValue) {
+                setAlert({})
+                const first = fromValue * fromToken.price
+                const second = parseFloat(toToken.price)
+                const convert = parseFloat(first.toFixed(2)) / parseFloat(second.toFixed(2))
+                const price = fromToken.price / toToken.price
+                const reverse = toToken.price / fromToken.price
+                setPrice(valueFormatter(price))
+                setReverse(valueFormatter(reverse))
+                setConvert(valueFormatter(convert))
+            } else {
+                setAlert({
+                    msg: 'Saldo insuficiente',
+                    error: true
+                })
+                setTimeout(() => {
+                    setAlert({})
+                }, 4000)
+            }
+        } else {
+            setAlert({
+                msg: 'No tienes esta moneda',
+                error: true
+            })
+            setTimeout(() => {
+                setAlert({})
+            }, 4000)
+        }
     }
-
+    
     const handleCancel = () => {
         setConvert('')
         setFromValue('')
     }
+
+    const handleSubmit = async () => {
+        const authToken = localStorage.getItem('XpDZcaMrAgjT3D8u')
+        if (!authToken) return
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`
+            }
+        }
+
+        try {
+            const { data } = await axios.post('/api/swap', { symbolFrom: fromToken.symbol, priceFrom: fromToken.price, valueFrom: fromValue, nameTo: toToken.name, symbolTo: toToken.symbol, priceTo: toToken.price, convert, user: auth._id, config})
+            setWallet(data)
+            setAlert({
+                msg: `Has convertido ${fromToken.symbol} a ${toToken.symbol}`,
+                error: false
+            })
+            setTimeout( () => {
+                setAlert({})
+            }, 3000)
+            setConvert('')
+            setFromValue('')
+        } catch (error) {
+            setConvert('')
+            setFromValue('')
+            setAlert({
+                msg: error.data.response.msg,
+                error: true
+            })
+            setTimeout(() => {
+                setAlert({})
+            }, 3000)
+        }
+    }
+
+    const { msg } = alert
 
     return (
         loading ? <div className='absolute top-20 left-0 right-0 mx-auto'><Loading /></div> : tokens.length > 0 && fromToken?.id && toToken?.id && (
             <div className='my-20'>
                 <div className='px-5'>
                     <h1 className='text-6xl font-semibold text-center'>Convertir</h1>
-                    <p className='font-semibold mt-2 text-xl text-center mb-10'>La forma más rápida y sencilla de comprar y vender criptomonedas</p>
+                    <p className='font-semibold mt-2 text-xl text-center mb-16'>La forma más rápida y sencilla de comprar y vender criptomonedas</p>
                 </div>
-                <div className='px-8 md:px-0 md:w-4/6 lg:w-1/2 xl:w-1/3 md:mx-auto'>
+                {msg && <div className='w-fit mx-auto'><Alert alert={alert} /></div> }
+                <div className='px-8 md:px-0 md:w-4/6 lg:w-1/2 xl:w-5/12 2xl:w-1/2 md:mx-auto mt-16'>
                     <div className='text-lg font-semibold'>
-                        <label className='block mb-2'>De</label>
+                        <div className='flex items-center justify-between'>
+                            <label className='block mb-2'>De</label>
+                            {walletToken?.amount && walletToken?.amount > 0 && <div onClick={handleSetValue}><span className='text-sky-600 cursor-pointer'>{valueFormatter(walletToken.amount)} {walletToken.symbol}</span></div>}
+                        </div>
                         <div className='flex bg-gray-100 relative'>
-                            <input type='number' className='w-3/5 lg:w-3/4 bg-transparent outline-none p-3 font-semibold' placeholder='Introduce un valor' value={fromValue} onChange={e => setFromValue(e.target.value)} />
+                            <input type='number' className='w-3/5 lg:w-3/4 bg-transparent outline-none p-3 py-4 font-semibold placeholder:font-normal' placeholder='Introduce un valor' value={fromValue} onChange={e => setFromValue(e.target.value)} />
                             <div className=' flex items-center gap-2 w-2/5 lg:w-1/4 bg-transparent cursor-pointer select-none' onClick={() => handleModal('from')}>
                                 <Image src={fromToken?.logo_url} width={25} height={25} />
                                 <p>{fromToken?.id}</p>
@@ -142,7 +224,7 @@ export default function Convert () {
                     <div className='text-lg font-semibold'>
                         <label className='block mb-2'>A</label>
                         <div className='flex bg-gray-100 relative'>
-                            <input type='number' className='w-3/5 lg:w-3/4 bg-transparent outline-none p-3 font-semibold' disabled />
+                            <input type='number' className='w-3/5 lg:w-3/4 bg-transparent outline-none p-3 py-4 font-semibold' value={convert} disabled />
                             <div className=' flex items-center gap-2 w-2/5 lg:w-1/4 bg-transparent cursor-pointer select-none' onClick={() => handleModal('to')}>
                                 <Image src={toToken?.logo_url} width={25} height={25} />
                                 <p>{toToken?.id}</p>
@@ -178,10 +260,10 @@ export default function Convert () {
                         !loading && (
                             <div className='flex gap-10 text-lg'>
                                 <input type='button' value='Cancelar' className='p-3 bg-gray-300 text-black rounded-md w-full mt-5 cursor-pointer hover:bg-gray-400 transition-colors font-semibold' onClick={handleCancel} />
-                                <input type='button' value='Comprar' className='p-3 bg-sky-600 text-white rounded-md w-full mt-5 cursor-pointer hover:bg-sky-700 transition-colors font-semibold' onClick={handleConvert} />
+                                <input type='button' value='Convertir' className='p-3 bg-sky-600 text-white rounded-md w-full mt-5 cursor-pointer hover:bg-sky-700 transition-colors' onClick={handleSubmit} />
                             </div>
                         )
-                    ) : <input type='button' value='Previsualizar conversión' className='p-3 bg-sky-600 text-white rounded-md w-full mt-5 cursor-pointer hover:bg-sky-700 transition-colors text-lg font-semibold' onClick={handleSubmit} />}
+                    ) : <input type='button' value='Previsualizar conversión' className='p-3 bg-sky-600 text-white rounded-md w-full mt-5 cursor-pointer hover:bg-sky-700 transition-colors text-lg' onClick={handleConvert} />}
                 </div>
             </div>
         )

@@ -262,7 +262,7 @@ export default function Buy () {
                                 </>
                             )}
                         </div>
-                        <div className='w-full p-3 rounded-md bg-sky-600 text-white mt-10 font-semibold hover:bg-sky-700' onClick={handleContinue}>Contiunar</div>
+                        <div className='w-full p-3 rounded-md bg-sky-600 text-white mt-10 hover:bg-sky-700 cursor-pointer text-lg' onClick={handleContinue}>Continuar</div>
                     </div>
                 ) : (
                     <form className='md:w-8/12 lg:w-7/12 xl:w-6/12 2xl:w-1/2 mx-auto' onSubmit={e => handlePay(e)}>

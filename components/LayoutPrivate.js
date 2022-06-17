@@ -4,11 +4,13 @@ import Head from "next/head"
 import Link from "next/link"
 import useAuthProvider from "../hooks/useAuthProvider"
 import { useRouter } from "next/router"
+import useCryptoProvider from '../hooks/useCryptoProvider'
 
 const LayoutPrivate = ({children, page}) => {
 
     const router = useRouter()
-    const { auth } = useAuthProvider()
+    const { auth, setAuth, setEmail } = useAuthProvider()
+    const { setWallet, setToken, setBtcPrice, setBusd, setTradeToken } = useCryptoProvider()
 
     const [ menu, setMenu ] = useState(false)
     const [ accountModal, setAccountModal ] = useState(false)
@@ -21,6 +23,17 @@ const LayoutPrivate = ({children, page}) => {
         }
         redirect()
     }, [auth])
+
+    const handleSignout = () => {
+        localStorage.removeItem('XpDZcaMrAgjT3D8u')
+        setAuth({})
+        setWallet([])
+        setToken({})
+        setBtcPrice(0)
+        setBusd(0)
+        setTradeToken([])
+        setEmail('')
+    }
 
     return (
         auth._id && (
@@ -102,9 +115,9 @@ const LayoutPrivate = ({children, page}) => {
                                 </div>
                                 { accountModal && (
                                     <div className='absolute z-10 p-4 shadow-xl rounded-b-md border-t border-sky-600 bg-white right-10 flex flex-col gap-2 private-account'>
-                                        <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Cuenta</div>
+                                        <Link href={'/account'}><div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Cuenta</div></Link>
                                         <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Apariencia</div>
-                                        <div className='p-3 px-8 hover:bg-red-400 hover:text-white transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Cerrar sesión</div>
+                                        <div className='p-3 px-8 hover:bg-red-400 hover:text-white transition-colors cursor-pointer rounded-md whitespace-nowrap select-none' onClick={handleSignout}>Cerrar sesión</div>
                                     </div>
                                 )}
                             </div>

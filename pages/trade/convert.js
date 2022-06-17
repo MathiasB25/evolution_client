@@ -1,7 +1,7 @@
 import LayoutPrivate from "../../components/LayoutPrivate"
 import Convert from '../../components/trade/Convert'
 
-export default function Trade() {
+export default function TradeConvert() {
 
     return (
         <LayoutPrivate page='Convertir'>
