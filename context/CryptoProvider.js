@@ -64,7 +64,7 @@ const CryptoProvider = ({ children }) => {
         const getBusd = () => {
             if (wallet.length > 0) {
                 const busdToken = wallet.filter(token => token.symbol === 'BUSD')
-                setBusd(busdToken[0].amount)
+                setBusd(busdToken[0]?.amount)
             }
         }
         getBusd()
