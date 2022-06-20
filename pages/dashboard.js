@@ -14,8 +14,8 @@ export default function Dashboard() {
     const [ modalToken, setModalToken ] = useState({})
 
     const tokenPrice = (token) => {
-        const price = currencies.filter(currency => currency.symbol === token.symbol)
-        return price[0].price
+        const price = currencies?.filter(currency => currency.symbol === token.symbol)
+        return price[0]?.price
     }
 
     useEffect(() => {

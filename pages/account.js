@@ -1,7 +1,56 @@
+import axios from 'axios'
+import { useState } from "react"
 import Link from "next/link"
 import LayoutPrivate from "../components/LayoutPrivate"
+import useAuthProvider from "../hooks/useAuthProvider"
+import useCryptoProvider from "../hooks/useCryptoProvider"
+import Alert from '../components/Alert'
 
 export default function Account () {
+
+    const [ alert, setAlert ] = useState({})
+
+    const { auth, setAuth, setEmail } = useAuthProvider()
+    const { setWallet, setToken, setBtcPrice, setBusd, setTradeToken } = useCryptoProvider()
+
+    const handleDisable = () => {
+        const userConfirm = confirm('Estas seguro que deseas desactivar tu cuenta?')
+        if(userConfirm) {
+            handleSubmit()
+        }
+    }
+
+    const handleSubmit = async () => {
+        const authToken = localStorage.getItem('XpDZcaMrAgjT3D8u')
+        if (!authToken) return
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`
+            }
+        }
+
+        const { _id } = auth
+        try {
+            await axios.post('/api/disable', { _id, config })
+            localStorage.removeItem('XpDZcaMrAgjT3D8u')
+            setAuth({})
+            setWallet([])
+            setToken({})
+            setBtcPrice(0)
+            setBusd(0)
+            setTradeToken([])
+            setEmail('')
+        } catch (error) {
+            setAlert({
+                msg: error.response.data.msg,
+                error: true
+            })
+        }
+    }  
+
+    const { msg } = alert
 
     return (
         <LayoutPrivate page='Cuenta'>
@@ -22,7 +71,8 @@ export default function Account () {
                     </div>
                     <Link href='/account/edit'><div className='py-2 p-3 sm:px-5 bg-zinc-200 hover:bg-zinc-300 rounded-md cursor-pointer transition-colors'>Cambiar</div></Link>
                 </div>
-                <div className='px-5 py-3 bg-red-500 text-white rounded-md cursor-pointer w-fit mt-20'>Eliminar cuenta</div>
+                { msg && <Alert alert={alert} />}
+                <div className='px-5 py-3 bg-red-500 text-white rounded-md cursor-pointer w-fit mt-20' onClick={handleDisable}>Desactivar cuenta</div>
             </div>
         </LayoutPrivate>
     )

@@ -1,5 +1,5 @@
 export const priceFormatter = cantidad => {
-    return cantidad.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+    return cantidad?.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
 }
 
 export const valueFormatter = value => {

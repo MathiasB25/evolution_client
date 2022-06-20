@@ -116,7 +116,6 @@ const LayoutPrivate = ({children, page}) => {
                                 { accountModal && (
                                     <div className='absolute z-10 p-4 shadow-xl rounded-b-md border-t border-sky-600 bg-white right-10 flex flex-col gap-2 private-account'>
                                         <Link href={'/account'}><div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Cuenta</div></Link>
-                                        <div className='p-3 px-8 hover:bg-gray-100 transition-colors cursor-pointer rounded-md whitespace-nowrap select-none'>Apariencia</div>
                                         <div className='p-3 px-8 hover:bg-red-400 hover:text-white transition-colors cursor-pointer rounded-md whitespace-nowrap select-none' onClick={handleSignout}>Cerrar sesión</div>
                                     </div>
                                 )}
