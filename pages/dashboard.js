@@ -88,7 +88,7 @@ export default function Dashboard() {
                                         )}
                                         <Link href='/trade'><button type='button' className='cursor-pointer hover:text-sky-600 transition-colors hidden sm:block'>Comprar</button></Link>
                                         <Link href='/trade'><button type='button' className='cursor-pointer hover:text-sky-600 transition-colors hidden sm:block'>Vender</button></Link>
-                                        <Link href='/convert'><button type='button' className='cursor-pointer hover:text-sky-600 transition-colors hidden sm:block'>Convertir</button></Link>
+                                        <Link href='/trade/convert'><button type='button' className='cursor-pointer hover:text-sky-600 transition-colors hidden sm:block'>Convertir</button></Link>
                                     </div>
                                 </div>
                             ))}
@@ -97,7 +97,7 @@ export default function Dashboard() {
                 ) : (
                     <>                    
                         <div className='text-center text-4xl mt-20'>Tu billetera está vacía</div>
-                        <Link href='/buy'>
+                        <Link href='/deposit'>
                             <div className='p-3 px-5 bg-sky-600 rounded-lg text-xl mt-5 hover:bg-gradient-to-r from-sky-700 to-sky-500 text-white transition-colors cursor-pointer w-fit mx-auto'>Depositar</div>
                         </Link>
                     </>
