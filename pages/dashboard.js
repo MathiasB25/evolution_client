@@ -59,7 +59,7 @@ export default function Dashboard() {
                                     <div className='flex gap-4 items-center w-2/4 sm:w-5/12 lg:w-1/4'>
                                         <div>
                                             {currencies.map(image => (
-                                                image.symbol === token.symbol && <div key={image.symbol}><Image src={image?.logo_url} width={30} height={30} className='img-draggable' /></div>
+                                                image.symbol === token.symbol && <div key={image.symbol}><Image src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${image.id}.png`} width={30} height={30} className='img-draggable' /></div>
                                             ))}
                                         </div>
                                         <div>

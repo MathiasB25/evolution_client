@@ -253,7 +253,7 @@ export default function Buy () {
                                         <div className='deposit-modal-scroll pr-2'>
                                             {currencies.map(currency => (
                                                 <div key={currency?.symbol} className='flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer transition-colors rounded-md' onClick={() => handleToken(currency)} >
-                                                    <Image src={currency?.logo_url} width={30} height={30} />
+                                                    <Image src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${currency.id}.png`} width={30} height={30} />
                                                     <div>{currency?.name}</div>
                                                 </div>
                                             ))}
