@@ -233,7 +233,7 @@ export default function Buy () {
                                 <input type='number' placeholder='0.00' className='w-max text-xl bg-transparent outline-none' value={receive} onChange={e => handleReceive(e)} />
                                 <div className='flex gap-1 p-2 px-3 rounded-full bg-white w-fit cursor-pointer' onClick={() => setModalTokens(!modalTokens)}>
                                     { depositToken?.name && (
-                                        <Image src={depositToken?.logo_url} width={25} height={25} />
+                                        <Image src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${depositToken?.id}.png`} width={25} height={25} />
                                     )}
                                     <div className='font-semibold'>{depositToken?.name}</div>
                                 </div>
@@ -273,7 +273,7 @@ export default function Buy () {
                         <div className='mt-5'>
                             <label className='block text-left mb-2'>Número de tarjeta</label>
                             <div className='flex items-center'>
-                                <input type='number' placeholder='Introduce el número de la tarjeta' className='w-full outline-none p-3 border-l border-t border-b rounded-l-md' value={cardNumber} onChange={e => setCardNumber(e.target.value)} />
+                                <input type='text' placeholder='Introduce el número de la tarjeta' className='w-full outline-none p-3 border-l border-t border-b rounded-l-md' value={cardNumber} onChange={e => setCardNumber(e.target.value)} />
                                 {cardType === 'Visa' && <div className='w-fit border-r border-t border-b rounded-r-md p-3'><Image src='/img/cc/visa.png' width={38} height={13} className='img-draggable' /></div> }
                                 {cardType === 'Mastercard' && <div className='w-fit border-r border-t border-b rounded-r-md pt-4 pb-2 px-3'><Image src='/img/cc/master.svg' width={30} height={20} className='img-draggable' /></div> }
                             </div>

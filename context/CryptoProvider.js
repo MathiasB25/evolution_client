@@ -85,7 +85,6 @@ const CryptoProvider = ({ children }) => {
         }
     }, [token, wallet])
 
-
     return (
         <CryptoContext.Provider value={{
             currencies,
@@ -99,7 +98,7 @@ const CryptoProvider = ({ children }) => {
             busd,
             setBusd,
             tradeToken,
-            setTradeToken
+            setTradeToken,
         }}>
             {children}
         </CryptoContext.Provider>

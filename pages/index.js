@@ -7,6 +7,7 @@ import List from '../components/List'
 import useCryptoProvider from '../hooks/useCryptoProvider'
 import useAuthProvider from '../hooks/useAuthProvider'
 import ListMarket from '../components/skeleton/ListMarket'
+import LoadingV2 from '../components/LoadingV2'
 
 export default function Home() {
 

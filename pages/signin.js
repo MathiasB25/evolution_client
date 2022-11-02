@@ -15,7 +15,7 @@ const Signin = () => {
     const [ password, setPassword ] = useState('')
     const [ alert, setAlert ] = useState('')
 
-    const { auth, setLoggingin } = useAuthProvider()
+    const { auth, setLoggingin } = useAuthProvider() 
 
     useEffect( () => {
         if(auth?._id) {
@@ -40,17 +40,15 @@ const Signin = () => {
         try {
             const { data } = await axios.post('/api/signin', { email, password })
             localStorage.setItem('XpDZcaMrAgjT3D8u', data.token)
-            setAlert({
-                msg: 'Sesión iniciada, redireccionando...',
-                error: false
-            })
-            setTimeout( () => {
-                setLoggingin(true)
-            }, 2500)
+            setLoggingin(true);
+            setLoadingLayout(true);
             setTimeout(() => {
-                setAlert({})
+                setLoadingDelay(true)
                 router.push('/dashboard')
-            }, 3000)
+            }, 1000)
+            setTimeout(() => {
+                setLoadingLayout(false);
+            }, 1650)
         } catch (error) {
             setAlert({
                 msg: error.response.data.msg,

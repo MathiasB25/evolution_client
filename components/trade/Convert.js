@@ -41,7 +41,7 @@ export default function Convert () {
 
     useEffect( () => {
         setFromValue('')
-        const walletToken = wallet.filter(token => token.symbol === fromToken.symbol)
+        const walletToken = wallet.filter(token => token.symbol === fromToken?.symbol)
         setWalletToken(walletToken[0])
     }, [fromToken])
 
@@ -66,8 +66,8 @@ export default function Convert () {
             tokensState = [...tokensState, currencies[i]]
         }
         setTokens(tokensState)
-        setFromToken(tokensState.filter(token => token?.id === 'USDT')[0])
-        setToToken(tokensState.filter(token => token?.id === 'BTC')[0])
+        setFromToken(tokensState.filter(token => token?.symbol === 'USDT')[0])
+        setToToken(tokensState.filter(token => token?.symbol === 'BTC')[0])
     }
 
     const handleSetValue = () => {
@@ -198,14 +198,14 @@ export default function Convert () {
                         <div className='flex bg-gray-100 relative'>
                             <input type='number' className='w-3/5 lg:w-3/4 bg-transparent outline-none p-3 py-4 font-semibold placeholder:font-normal' placeholder='Introduce un valor' value={fromValue} onChange={e => setFromValue(e.target.value)} />
                             <div className=' flex items-center gap-2 w-2/5 lg:w-1/4 bg-transparent cursor-pointer select-none' onClick={() => handleModal('from')}>
-                                <Image src={fromToken?.logo_url} width={25} height={25} />
-                                <p>{fromToken?.id}</p>
+                                <Image src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${fromToken?.id}.png`} width={25} height={25} />
+                                <p>{fromToken?.symbol}</p>
                                 {fromModal && (
                                     <div className='absolute w-full bg-gray-100 left-0 top-12 z-10 h-60 overflow-y-scroll'>
                                         {currencies.map(token => (
                                             <div key={token?.id} className='flex gap-3 items-center p-2 hover:bg-gray-300 cursor-pointer' onClick={() => setFromToken(token)}>
-                                                <Image src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${token.id}.png`} width={25} height={25} />
-                                                <p>{token.id}</p>
+                                                <Image src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${token?.id}.png`} width={25} height={25} />
+                                                <p>{token.symbol}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -226,14 +226,14 @@ export default function Convert () {
                         <div className='flex bg-gray-100 relative'>
                             <input type='number' className='w-3/5 lg:w-3/4 bg-transparent outline-none p-3 py-4 font-semibold' value={convert} disabled />
                             <div className=' flex items-center gap-2 w-2/5 lg:w-1/4 bg-transparent cursor-pointer select-none' onClick={() => handleModal('to')}>
-                                <Image src={toToken?.logo_url} width={25} height={25} />
-                                <p>{toToken?.id}</p>
+                                <Image src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${toToken?.id}.png`} width={25} height={25} />
+                                <p>{toToken?.symbol}</p>
                                 {toModal && (
                                     <div className='absolute w-full bg-gray-100 left-0 top-12 z-10 h-60 overflow-y-scroll'>
                                         {tokens.length >= 1 && currencies.map(token => (
                                             <div key={token?.id} className='flex gap-3 items-center p-2 hover:bg-gray-300 cursor-pointer' onClick={() => setToToken(token)}>
                                                 <Image src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${token.id}.png`} width={25} height={25} />
-                                                <p>{token?.id}</p>
+                                                <p>{token?.symbol}</p>
                                             </div>
                                         ))}
                                     </div>

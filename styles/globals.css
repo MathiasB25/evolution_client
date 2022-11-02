@@ -15,6 +15,10 @@ div, a, span, p {
   padding: 0;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 /* Disable image draggable */
 .img-draggable {
   -webkit-user-drag: none;
@@ -321,4 +325,34 @@ input[type=number] {
   top: 0;
   height: 100vh;
   background: rgba(0, 0, 0, .5);
+}
+
+.loadingStart {
+  animation-name: loadingStart;
+  animation-duration: .7s;
+  animation-timing-function: ease-in-out;
+}
+
+.loadingEnd {
+  animation-name: loadingEnd;
+  animation-duration: .7s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes loadingStart {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loadingEnd {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
