@@ -169,7 +169,7 @@ export default function Trade() {
 
     return (
         <LayoutPrivate page='Intercambiar'>
-            <div className='flex flex-col-reverse lg:flex-row overflow-y-scroll layout-children-height'>
+            <div className='flex flex-col-reverse lg:flex-row overflow-y-scroll layout-children-height' id="trade-scrollable">
                 <div className='w-full lg:w-2/3 lg:border-r lg:border-gray-200 px-0 sm:px-5 lg:overflow-y-scroll'>
                     <div className='text-5xl px-4 py-10 font-semibold'>Mercado</div>
                     <div className='flex items-center'>

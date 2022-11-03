@@ -24,6 +24,11 @@ const List = ({ token }) => {
         }, 1000)
     }, [token.price])
 
+    function handleBuy() {
+        setToken(token);
+        document.body.offsetWidth < 1024 && document.getElementsByTagName('html')[0].scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     return (
         token && (
             <div key={token.symbol} className='flex items-center'>
@@ -41,7 +46,7 @@ const List = ({ token }) => {
                 </div>
                 <div className='w-1/3 lg:w-3/12 text-right'>
                     {token.id !== 'USDT' && token.id !== 'BUSD' && token.id !== 'USDC' && token.id !== 'DAI' && (
-                        <button className='p-3 bg-sky-600 text-white rounded-md hover:bg-gradient-to-r from-sky-700 to-sky-500' onClick={() => setToken(token)}>Comprar</button>
+                        <button className='p-3 bg-sky-600 text-white rounded-md hover:bg-gradient-to-r from-sky-700 to-sky-500' onClick={handleBuy}>Comprar</button>
                     )}
                 </div>
             </div>
